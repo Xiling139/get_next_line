@@ -1,16 +1,5 @@
 #include "get_next_line.h"
 
-int get_len(char *buffer, int index)
-{
-    int count = 0;
-    
-    while(buffer[index + count] && buffer[index + count] != '\n')
-    {
-        count++;
-    }
-    return (count);
-}
-
 char *get_next_line(int fd)
 {
     char buffer[4096];
@@ -22,10 +11,11 @@ char *get_next_line(int fd)
     line = (char *)malloc(sizeof(char) * (get_len(buffer, index) + 1));
     if (!line)
         return (NULL);
-    while (i < 4096)
+    while (buffer[index])
     {
         if (buffer[index] == '\n') {
             line[i] = '\n';
+            i++;
             index++;
             break;
         }
@@ -44,8 +34,10 @@ char *get_next_line(int fd)
 int main(void)
 {
     int fd = open("heheheha.txt", O_RDONLY);
-    if (fd == -1)
-        return (-1);
+    if (fd == -1){
+        printf("File not found!\n");
+        return (-1);    
+    }
     for (int i = 0; i < 5; i++) {
         char *s = get_next_line(fd);
         printf("%s", s);
