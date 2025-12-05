@@ -1,47 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zhenming <zhewu@student.42tokyo.jp>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/05 15:26:12 by zhenming          #+#    #+#             */
+/*   Updated: 2025/12/05 18:39:19 by zhenming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    char buffer[4096];
-    char *line;
-    static int index = 0;
-    int i = 0;
-    
-    read(fd, buffer, 4096);
-    line = (char *)malloc(sizeof(char) * (get_len(buffer, index) + 1));
-    if (!line)
-        return (NULL);
-    while (buffer[index])
-    {
-        if (buffer[index] == '\n') {
-            line[i] = '\n';
-            i++;
-            index++;
-            break;
-        }
-        else 
-            line[i] = buffer[index];
-        i++;
-        index++;
-    }
-    line[i] = '\0';
-    return(line);
-}
+	char		buffer[BUFFER_SIZE];
+	char		*line;
+	static int	index = 0;
+	int			i;
 
-#include <fcntl.h>
-#include <stdio.h>
-
-int main(void)
-{
-    int fd = open("heheheha.txt", O_RDONLY);
-    if (fd == -1){
-        printf("File not found!\n");
-        return (-1);    
-    }
-    for (int i = 0; i < 5; i++) {
-        char *s = get_next_line(fd);
-        printf("%s", s);
-        free(s);
-    }
-    close(fd);
+	i = 0;
+	read(fd, buffer, BUFFER_SIZE - 1);
+	line = (char *)malloc(sizeof(char) * (get_len(buffer, index) + 1));
+	if (!line)
+		return (NULL);
+	while (buffer[index] && buffer[index] != '\n')
+	{
+		line[i] = buffer[index];
+		i++;
+		index++;
+	}
+	line[i] = '\0';
+	return (line);
 }

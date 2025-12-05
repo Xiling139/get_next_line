@@ -3,7 +3,14 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
+//#define BUFFER_SIZE
+
+// Core function
+char	*get_next_line(int fd);
+
+/// GNL Utils
 int get_len(char *buffer, int index);
 
 #endif
