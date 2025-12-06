@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//#define BUFFER_SIZE
+//#define BUFFER_SIZE 4096
 
 // Core function
 char	*get_next_line(int fd);
