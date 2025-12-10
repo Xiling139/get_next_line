@@ -5,15 +5,15 @@
 int	main(void)
 {
 	int		fd;
-	char	*s;
+	char	*s = "";
 
-	fd = open("heheheha.txt", O_RDONLY);
+	fd = open("test_tier_1.txt", O_RDONLY);
 	if (fd == -1)
 	{
 		printf("File not found!\n");
 		return (-1);
 	}
-	for (int i = 0; i < 5; i++)
+	while(s != NULL)
 	{
 		s = get_next_line(fd);
 		printf("%s", s);
