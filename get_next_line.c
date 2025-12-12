@@ -11,22 +11,18 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int	merge_length(char *buffer, int start)
 {
 	int	count;
 
 	count = 0;
-	while (buffer[start + count])
+	while (buffer[start + count] && buffer[start + count] != '\n')
 	{
 		count++;
-		if (buffer[start + count] == '\n')
-		{
-			count++;
-			break ;
-		}
 	}
+	if (buffer[start + count] == '\n')
+		count++;
 	return (count);
 }
 
@@ -65,8 +61,8 @@ char	*str_to_merge(char *buffer, int index, int len)
 char	*get_next_line(int fd)
 {
 	static char	buffer[BUFFER_SIZE];
-	static int	index = -1;
-	int			max_index;
+	static int	pos = 0;
+	static int buffer_bytes = 0;
 	int			merge_len;
 	char		*line;
 
@@ -75,20 +71,28 @@ char	*get_next_line(int fd)
 	line = ft_strdup("");
 	while (true)
 	{
-		if (index != -1)
+		if (pos >= buffer_bytes)
 		{
-			merge_len = merge_length(buffer, index);
-			line = update_str(line, str_to_merge(buffer, index, merge_len));
-			if (line == NULL)
-				return (NULL);
-			index += merge_len;
-			if (index < max_index)
-				break ;
+			buffer_bytes = read(fd, buffer, sizeof(buffer) - 1);
+			if (buffer_bytes <= 0)
+			{
+				if (buffer_bytes < 0 || (buffer_bytes == 0 && line[0] == '\0'))
+				{
+					free(line);
+					return (NULL);
+				}
+				return (line);
+			}
+			pos = 0;
+			buffer[buffer_bytes] = '\0';
 		}
-		index = 0;
-		max_index = read(fd, buffer, sizeof(buffer) - 1);
-		if (max_index <= 0)
+		merge_len = merge_length(buffer, pos);
+		line = update_str(line, str_to_merge(buffer, pos, merge_len));
+		if (line == NULL)
 			return (NULL);
+		pos += merge_len;
+		if ((get_last_char(line) == '\n'))
+			break ;
 	}
 	return (line);
 }

@@ -72,3 +72,18 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str[i] = '\0';
 	return (str);
 }
+
+char get_last_char(char *str)
+{
+	char c;
+	int i;
+
+	c = '\0';
+	i = 0;
+	while(str[i])
+	{
+		c = str[i];
+		i++;
+	}
+	return (c);
+}
