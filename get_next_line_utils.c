@@ -6,7 +6,7 @@
 /*   By: zhenming <zhewu@student.42tokyo.jp>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:38:51 by zhenming          #+#    #+#             */
-/*   Updated: 2025/12/10 17:31:31 by zhenming         ###   ########.fr       */
+/*   Updated: 2025/12/12 18:17:30 by zhenming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,23 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-char get_last_char(char *str)
+char	get_last_char(char *str)
 {
-	char c;
-	int i;
+	char	c;
+	int		i;
 
 	c = '\0';
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		c = str[i];
 		i++;
 	}
 	return (c);
+}
+
+char	*allocate_null(char *str)
+{
+	free(str);
+	return (NULL);
 }

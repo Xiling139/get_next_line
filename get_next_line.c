@@ -6,64 +6,87 @@
 /*   By: zhenming <zhewu@student.42tokyo.jp>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:26:12 by zhenming          #+#    #+#             */
-/*   Updated: 2025/12/10 20:08:44 by zhenming         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:57:51 by zhenming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	merge_length(char *buffer, int start)
+char	*omit_error(int value, char *line)
 {
-	int	count;
-
-	count = 0;
-	while (buffer[start + count] && buffer[start + count] != '\n')
-	{
-		count++;
-	}
-	if (buffer[start + count] == '\n')
-		count++;
-	return (count);
+	if (value == 0)
+		return (line);
+	return (NULL);
 }
 
 char	*update_str(char *str, char *to_merge)
 {
 	char	*new_str;
 
-	if (to_merge == NULL)
+	if (str == NULL)
 		return (NULL);
+	if (to_merge == NULL)
+		return (free(str), NULL);
 	new_str = ft_strjoin(str, to_merge);
 	if (!new_str)
-		return (NULL);
+		return (free(str), free(to_merge), NULL);
 	free(str);
 	free(to_merge);
 	return (new_str);
 }
 
-char	*str_to_merge(char *buffer, int index, int len)
+char	*str_to_merge(char *buffer, int *pos)
 {
 	char	*str;
 	int		i;
+	int		len;
 
+	len = 0;
+	while (buffer[*pos + len] && buffer[*pos + len] != '\n')
+	{
+		len++;
+	}
+	if (buffer[*pos + len] == '\n')
+		len++;
 	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
 	while (i < len)
 	{
-		str[i] = buffer[index + i];
+		str[i] = buffer[*pos + i];
 		i++;
 	}
 	str[i] = '\0';
+	*pos += len;
 	return (str);
+}
+
+int	read_to_buffer(int fd, char *buffer, char *line)
+{
+	int	buffer_bytes;
+
+	if (line == NULL)
+		return (-1);
+	buffer_bytes = read(fd, buffer, sizeof(buffer) - 1);
+	if (buffer_bytes <= 0)
+	{
+		if (buffer_bytes < 0 || (buffer_bytes == 0 && line[0] == '\0'))
+		{
+			free(line);
+			return (-1);
+		}
+		return (0);
+	}
+	buffer[buffer_bytes] = '\0';
+	return (buffer_bytes);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	buffer[BUFFER_SIZE];
+	static char	buffer[BUFFER_SIZE + 1];
 	static int	pos = 0;
-	static int buffer_bytes = 0;
-	int			merge_len;
+	static int	buffer_bytes = 0;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -73,24 +96,14 @@ char	*get_next_line(int fd)
 	{
 		if (pos >= buffer_bytes)
 		{
-			buffer_bytes = read(fd, buffer, sizeof(buffer) - 1);
+			buffer_bytes = read_to_buffer(fd, buffer, line);
 			if (buffer_bytes <= 0)
-			{
-				if (buffer_bytes < 0 || (buffer_bytes == 0 && line[0] == '\0'))
-				{
-					free(line);
-					return (NULL);
-				}
-				return (line);
-			}
+				return (omit_error(buffer_bytes, line));
 			pos = 0;
-			buffer[buffer_bytes] = '\0';
 		}
-		merge_len = merge_length(buffer, pos);
-		line = update_str(line, str_to_merge(buffer, pos, merge_len));
+		line = update_str(line, str_to_merge(buffer, &pos));
 		if (line == NULL)
 			return (NULL);
-		pos += merge_len;
 		if ((get_last_char(line) == '\n'))
 			break ;
 	}
