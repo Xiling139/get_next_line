@@ -6,7 +6,7 @@
 /*   By: zhenming <zhewu@student.42tokyo.jp>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 16:53:14 by zhenming          #+#    #+#             */
-/*   Updated: 2025/12/13 14:36:29 by zhenming         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:13:32 by zhenming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 43
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 43
+# endif
 
 /* Core funtions */
 char	*get_next_line(int fd);

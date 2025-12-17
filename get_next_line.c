@@ -6,7 +6,7 @@
 /*   By: zhenming <zhewu@student.42tokyo.jp>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:26:12 by zhenming          #+#    #+#             */
-/*   Updated: 2025/12/13 12:57:51 by zhenming         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:17:48 by zhenming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	read_to_buffer(int fd, char *buffer, char *line)
 
 	if (line == NULL)
 		return (-1);
-	buffer_bytes = read(fd, buffer, sizeof(buffer) - 1);
+	buffer_bytes = read(fd, buffer, BUFFER_SIZE);
 	if (buffer_bytes <= 0)
 	{
 		if (buffer_bytes < 0 || (buffer_bytes == 0 && line[0] == '\0'))
